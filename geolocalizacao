@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geolocalização</title>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                alert("Geolocalização não é suportada pelo navegador.");
+            }
+        }
+
+        function showPosition(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            alert(`Latitude: ${latitude}, Longitude: ${longitude}`);
+            // Enviar dados para o servidor
+            fetch('https://seu-servidor.com/geolocalizacao', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ latitude, longitude })
+            });
+        }
+
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("Usuário negou a solicitação de geolocalização.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("As informações de localização não estão disponíveis.");
+                    break;
+                case error.TIMEOUT:
+                    alert("A solicitação para obter a localização expirou.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("Ocorreu um erro desconhecido.");
+                    break;
+            }
+        }
+    </script>
+</head>
+<body onload="getLocation()">
+    <h1>Obtendo sua localização...</h1>
+</body>
+</html>
